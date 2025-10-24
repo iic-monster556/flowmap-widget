@@ -1,0 +1,39 @@
+<!doctype html>
+<meta charset="utf-8" />
+<title>SRI generator (SHA-384)</title>
+<style>
+  body{font:14px/1.5 system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; max-width:780px; margin:40px auto; padding:0 16px}
+  input,button{font:inherit}
+  input{width:100%;padding:10px;border:1px solid #ccc;border-radius:8px}
+  button{margin-top:10px;padding:10px 14px;border:1px solid #ccc;border-radius:8px;background:#f6f6f6;cursor:pointer}
+  pre{background:#111;color:#0f0;padding:12px;border-radius:8px;overflow:auto}
+  .muted{color:#666}
+</style>
+
+<h1>SRI generator (SHA-384)</h1>
+<p class="muted">아래 URL의 파일을 내려받아 <code>integrity</code> 값(<code>sha384-...</code>)을 만들어줍니다.</p>
+
+<input id="url" value="https://iic-monster556.github.io/flowmap-widget/flowmap-widget.js" />
+<button id="go">Generate</button>
+
+<h3>결과</h3>
+<pre id="out">(아직 없음)</pre>
+
+<script>
+async function gen() {
+  const url = document.getElementById('url').value.trim();
+  const out = document.getElementById('out');
+  out.textContent = '다운로드 중... ' + url;
+  try {
+    const res = await fetch(url, {cache: 'no-store'});
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const buf = await res.arrayBuffer();
+    const hash = await crypto.subtle.digest('SHA-384', buf);
+    const b64  = btoa(String.fromCharCode(...new Uint8Array(hash)));
+    out.textContent = 'sha384-' + b64;
+  } catch (e) {
+    out.textContent = '오류: ' + e.message;
+  }
+}
+document.getElementById('go').onclick = gen;
+</script>
