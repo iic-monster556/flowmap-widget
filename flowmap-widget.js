@@ -1,4 +1,4 @@
-// flowmap-widget.js (tag: com-iic-flowmap) - amCharts5 auto-load, JSON string/array both OK
+// flowmap-widget.js (tag: com-iic-flowmap) - amCharts5를 내 GitHub Pages에서 로드
 (function () {
   const loadScript = (src) => new Promise((resolve, reject) => {
     if ([...document.scripts].some(s => s.src === src)) return resolve();
@@ -25,6 +25,7 @@
       this._hint = this._shadow.getElementById("hint");
       this._data = []; this._root = null; this._playing = true;
     }
+
     set data(v){ try{
       if (typeof v==="string") this._data = JSON.parse(v||"[]");
       else if (Array.isArray(v)) this._data = v; else this._data=[];
@@ -32,11 +33,13 @@
     set play(v){ this._playing = !!v; if (this._root) this._render(); }
 
     async connectedCallback(){
+      // ★ 내 깃허브 페이지에서 라이브러리 로드
+      const base = "https://iic-monster556.github.io/flowmap-widget/lib/";
       if (!(window.am5&&window.am5map&&window.am5geodata_worldLow)){
         this._hint.style.display="flex";
-        await loadScript("https://cdn.jsdelivr.net/npm/@amcharts/amcharts5@5/index.js");
-        await loadScript("https://cdn.jsdelivr.net/npm/@amcharts/amcharts5@5/map.js");
-        await loadScript("https://cdn.jsdelivr.net/npm/@amcharts/amcharts5-geodata@5/worldLow.js");
+        await loadScript(base + "index.js");
+        await loadScript(base + "map.js");
+        await loadScript(base + "worldLow.js");
         this._hint.style.display="none";
       }
       this._render();
